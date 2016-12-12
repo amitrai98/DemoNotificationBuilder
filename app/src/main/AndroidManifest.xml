@@ -22,6 +22,14 @@
             android:name=".NotificationLanding"
             android:label="@string/title_activity_notification_landing"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+
+        <receiver android:name=".TestReceiver">
+            <intent-filter>
+                <action android:name="com.logan.yesclicked"/>
+                <action android:name="com.logan.noclicked"/>
+                <action android:name="MAYBE_ACTION"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

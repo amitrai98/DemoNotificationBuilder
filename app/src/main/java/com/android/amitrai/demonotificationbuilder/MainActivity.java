@@ -11,6 +11,7 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.RemoteInput;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -19,15 +20,17 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.RemoteViews;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
 
     private static final int NOTIFICATION_ID = 1;
+    // Key for the string that's delivered in the action's intent.
+    private static final String KEY_TEXT_REPLY = "key_text_reply";
 
     private NotificationManager mNotificationManager;
+    private RemoteInput remoteInput;
 
 
     @Override
@@ -36,7 +39,6 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -49,6 +51,13 @@ public class MainActivity extends AppCompatActivity
 
         mNotificationManager = (NotificationManager) getActivity().getSystemService(Context
                 .NOTIFICATION_SERVICE);
+
+
+
+
+        remoteInput = new RemoteInput.Builder(KEY_TEXT_REPLY)
+                .setLabel("reply")
+                .build();
     }
 
     @Override
@@ -151,6 +160,7 @@ public class MainActivity extends AppCompatActivity
 
         builder.setContentIntent(contentIntent);
         builder.setAutoCancel(true);
+
         builder.setLights(Color.BLUE, 500, 500);
         long[] pattern = {500,500,500,500,500,500,500,500,500};
         builder.setVibrate(pattern);
@@ -170,20 +180,38 @@ public class MainActivity extends AppCompatActivity
 
         //Yes intent
         Intent yesReceive = new Intent();
-//        yesReceive.setAction("yes");
-        PendingIntent pendingIntentYes = PendingIntent.getBroadcast(getActivity(), 12345, yesReceive, PendingIntent.FLAG_UPDATE_CURRENT);
+        yesReceive.putExtra("id",NOTIFICATION_ID);
+        yesReceive.setAction("com.logan.yesclicked");
+
+        PendingIntent pendingIntentYes = PendingIntent.getBroadcast(getActivity(), 123, yesReceive,PendingIntent.FLAG_UPDATE_CURRENT);
+
         builder.addAction(R.drawable.accept, "Yes", pendingIntentYes);
-//No intent
-        Intent noReceive = new Intent(getActivity(), NotificationLanding.class);
-//        noReceive.setAction("NO_ACTION");
+        //No intent
+        Intent noReceive = new Intent();
+        noReceive.putExtra("id",NOTIFICATION_ID);
+        noReceive.setAction("com.logan.noclicked");
         noReceive.putExtra(NotificationLanding.NOTIFICATION_ID, NotificationLanding.NOTIFICATION_CANCEL);
-        PendingIntent pendingIntentNo = PendingIntent.getBroadcast(getActivity(), 12345, noReceive, PendingIntent.FLAG_UPDATE_CURRENT);
-        builder.addAction(R.drawable.cancel, "No", pendingIntentNo);
+        PendingIntent pendingIntentNo = PendingIntent.getBroadcast(getActivity(), 1234, noReceive, PendingIntent.FLAG_CANCEL_CURRENT);
+        builder.addAction(R.drawable.cancel, "no", pendingIntentNo);
 
 
-        RemoteViews view = new RemoteViews(getPackageName(), R.layout.notification_layout);
+        Intent replyIntent = new Intent();
+        yesReceive.putExtra("id",NOTIFICATION_ID);
+        yesReceive.setAction("com.logan.yesclicked");
+
+       /* PendingIntent replyPendingIntent = PendingIntent.getBroadcast(getActivity(), 123, replyIntent,PendingIntent.FLAG_UPDATE_CURRENT);
+
+        // Create the reply action and add the remote input.
+        Notification.Action action =
+                new Notification.Action.Builder(R.drawable.ic_menu_send,
+                        getString(R.string.app_name)
+                        .addRemoteInput(remoteInput)
+                        .build();*/
+
+        /*RemoteViews view = new RemoteViews(getPackageName(), R.layout.notification_layout);
         view.setOnClickPendingIntent(R.id.btn_yes, pendingIntentNo);
-        builder.setContent(view);
+        builder.setContent(view);*/
+
 
         return builder.build();
     }
