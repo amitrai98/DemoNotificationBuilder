@@ -20,6 +20,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -31,12 +32,15 @@ public class MainActivity extends AppCompatActivity
 
     private NotificationManager mNotificationManager;
     private RemoteInput remoteInput;
+    public static TextView txt_status = null;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        txt_status = (TextView) findViewById(R.id.txt_status);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -119,9 +123,8 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void run() {
                 try {
-                    Thread.sleep(2000);
                     mNotificationManager.notify(NOTIFICATION_ID, createNotification(true));
-                } catch (InterruptedException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
