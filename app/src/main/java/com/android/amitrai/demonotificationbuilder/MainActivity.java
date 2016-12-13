@@ -39,27 +39,20 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
-
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
         mNotificationManager = (NotificationManager) getActivity().getSystemService(Context
                 .NOTIFICATION_SERVICE);
-
-
-
-
         remoteInput = new RemoteInput.Builder(KEY_TEXT_REPLY)
                 .setLabel("reply")
                 .build();
-    }
 
+    }
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -194,7 +187,6 @@ public class MainActivity extends AppCompatActivity
         PendingIntent pendingIntentNo = PendingIntent.getBroadcast(getActivity(), 1234, noReceive, PendingIntent.FLAG_CANCEL_CURRENT);
         builder.addAction(R.drawable.cancel, "no", pendingIntentNo);
 
-
         Intent replyIntent = new Intent();
         yesReceive.putExtra("id",NOTIFICATION_ID);
         yesReceive.setAction("com.logan.yesclicked");
@@ -211,8 +203,6 @@ public class MainActivity extends AppCompatActivity
         /*RemoteViews view = new RemoteViews(getPackageName(), R.layout.notification_layout);
         view.setOnClickPendingIntent(R.id.btn_yes, pendingIntentNo);
         builder.setContent(view);*/
-
-
         return builder.build();
     }
 
